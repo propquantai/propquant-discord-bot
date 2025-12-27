@@ -199,8 +199,20 @@ app.listen(PORT, () => {
 });
 
 // Login
-client.login(process.env.DISCORD_BOT_TOKEN)
-    .then(() => console.log('🔐 Logging in to Discord...'))
+const botToken = process.env.DISCORD_BOT_TOKEN;
+console.log('🔍 Checking bot token...');
+console.log(`Token exists: ${!!botToken}`);
+console.log(`Token length: ${botToken ? botToken.length : 0}`);
+
+if (!botToken) {
+    console.error('❌ DISCORD_BOT_TOKEN not found in environment variables!');
+    console.error('Available env vars:', Object.keys(process.env).filter(k => k.includes('DISCORD')));
+    process.exit(1);
+}
+
+console.log('🔐 Attempting to login to Discord...');
+client.login(botToken)
+    .then(() => console.log('✅ Login successful!'))
     .catch(err => {
         console.error('❌ Login failed:', err.message);
         process.exit(1);
